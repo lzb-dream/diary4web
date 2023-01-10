@@ -39,7 +39,6 @@ class Login(APIView):
             token = jwt.encode({'user':openId}, key=settings.SECRET_KEY, algorithm='HS256')
         loveImageList = []
         for i in heartWallpapwer:
-            print(heartWallpapwer)
             tableS = list(i.keys())[0]
             imageId = list(i.values())[0]
             table = None

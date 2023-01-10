@@ -10,7 +10,6 @@ class LoveImage(APIView):
         image = data.get('image')
         if not image:
             return Response({'error':'image不存在'},status=500)
-        print(image)
         user = User.objects.filter(openId=data.get('openId')).first()
         heartWallpaper = json.loads(user.heartWallpaper)
         heartWallpaper.insert(0,image)
@@ -25,7 +24,6 @@ class LoveImage(APIView):
     def delete(self,request):
         data = request.data
         image = data.get('image')
-        print(image)
         user = User.objects.filter(openId=data.get('openId')).first()
         heartWallpaper = json.loads(user.heartWallpaper)
         heartWallpaper.remove(image)

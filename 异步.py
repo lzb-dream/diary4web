@@ -40,9 +40,9 @@ q = queue.Queue()
 # t2.start()
 
 # 时间
-import datetime,time
-newTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-print(newTime)
+# import datetime,time
+# newTime = datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+# print(newTime)
 # times = (datetime.datetime.now()+datetime.timedelta(days=1,seconds=2000)).strftime("%Y-%m-%d %H:%M:%S")
 # print(times)
 #
@@ -50,6 +50,8 @@ print(newTime)
 # print(time_stamp)
 # print(time.time())
 
+a = [1,2]
+print(a[-1])
 
 
 
