@@ -19,12 +19,28 @@ class DiaryManagement(APIView):
         diaryId = Diary.objects.filter(user_id=user_id,writeTime=writeTime).first().id
         return Response({'diaryId':diaryId})
 
+    def get(self,request):
+        data = request.GET
+        openId = data.get('openId')
+        id = User.objects.filter(openId=openId).first()
+        diarys = Diary.objects.filter(user=id).order_by('-id')
+        diaryList = []
+        for i in diarys:
+            diary = i.__dict__
+            diary.pop('_state')
+            diary['writeTime'] = str(diary['writeTime'])
+            diary['video'] = json.loads(diary['video'])
+            diary['videoPhoto'] = json.loads(diary['videoPhoto'])
+            diary['image'] = json.loads(diary['image'])
+            diaryList.append(diary)
+        return Response({'diaryList':diaryList})
+
+
 import jwt
 from django.conf import settings
 class Media(APIView):
     def post(self,request):
         data = request.data
-        print(data)
         token = request.META.get("HTTP_AUTHORIZATION")
         key = settings.SECRET_KEY
         try:
@@ -32,7 +48,6 @@ class Media(APIView):
         except:
             return Response({'error':'token错误'})
         openId = tokenParse.get('user')
-
         mediaFile = data.get('media')
         diaryId = data.get('diaryId')
         type = data.get('type')
@@ -42,5 +57,18 @@ class Media(APIView):
         with open(src,mode='wb') as f:
             for i in mediaFile:
                 f.write(i)
-        print(fileName)
+        diary = Diary.objects.filter(id=diaryId).first()
+        if type == 'image':
+            filed = json.loads(diary.image)
+            filed.insert(0,src)
+            diary.image = json.dumps(filed)
+        elif type == 'video':
+            filed = json.loads(diary.video)
+            filed.insert(0, src)
+            diary.video = json.dumps(filed)
+        elif type == 'videoPhoto':
+            filed = json.loads(diary.videoPhoto)
+            filed.insert(0, src)
+            diary.videoPhoto = json.dumps(filed)
+        diary.save()
         return Response({'message':'ok'})
