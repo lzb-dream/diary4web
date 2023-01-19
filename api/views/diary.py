@@ -35,6 +35,10 @@ class DiaryManagement(APIView):
             diaryList.append(diary)
         return Response({'diaryList':diaryList})
 
+    def update(self,request):
+
+        return Response({'message':'ok'})
+
 
 import jwt
 from django.conf import settings
