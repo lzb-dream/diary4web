@@ -4,13 +4,14 @@ from .views.randomWallpaper import GetWallPaper
 from .views.wallpaper import Add
 from .views.loveImage import LoveImage
 from .views.diary import DiaryManagement,Media
-
+from .views.speack import S
 
 urlpatterns = [
     path('login',Login.as_view()),
     path('loveimage',LoveImage.as_view()),
     path('diary',DiaryManagement.as_view()),
     path('media', Media.as_view()),
+    path('speack', S.as_view()),
 
 
 

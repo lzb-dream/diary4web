@@ -1,4 +1,4 @@
-from ..Serializers import UserSerializer,User,Diary,DiarySerializer
+from ..Serializers import User,Diary,DiarySerializer
 from rest_framework.views import APIView,Response
 import json
 from ..models import Family,GourmetFood,Child,Appointment
@@ -35,11 +35,25 @@ class DiaryManagement(APIView):
             diaryList.append(diary)
         return Response({'diaryList':diaryList})
 
-    def update(self,request):
-
+    def put(self,request):
+        data = request.data.get('diary')
+        id = data.get('id')
+        diaryText = data.get('diary')
+        address = data.get('address')
+        mood = data.get('mood')
+        weather = data.get('weather')
+        DiaryObject = Diary.objects.filter(id=id).first()
+        Ds = DiarySerializer(instance=DiaryObject,data={
+            'diary':diaryText,
+            'address':address,
+            'mood':mood,
+            weather:weather
+        },partial=True)
+        if Ds.is_valid(raise_exception=True):
+            Ds.save()
         return Response({'message':'ok'})
 
-
+import os
 import jwt
 from django.conf import settings
 class Media(APIView):
@@ -74,5 +88,27 @@ class Media(APIView):
             filed = json.loads(diary.videoPhoto)
             filed.insert(0, src)
             diary.videoPhoto = json.dumps(filed)
+        diary.save()
+        return Response({'message':'ok'})
+
+    def delete(self,request):
+        data = request.data
+        type = data.get('type')
+        media = data.get('media')
+        diaryId = data.get('id')
+        diary = Diary.objects.filter(id=diaryId).first()
+        if type == 'image':
+            filed = json.loads(diary.image)
+            filed.remove(media)
+            diary.image = json.dumps(filed)
+        elif type == 'video':
+            filed = json.loads(diary.video)
+            filed.remove(media)
+            diary.video = json.dumps(filed)
+        elif type == 'videoPhoto':
+            filed = json.loads(diary.videoPhoto)
+            filed.remove(media)
+            diary.videoPhoto = json.dumps(filed)
+        os.remove(media)
         diary.save()
         return Response({'message':'ok'})
