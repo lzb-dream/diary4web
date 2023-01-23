@@ -3,10 +3,14 @@ import jwt
 from django.conf import settings
 from django.http import JsonResponse
 import json
+import re
 
 class Myware(MiddlewareMixin):
     # 请求到达路由之前
     def process_request(self,request):
+        judge = re.match(r'^/admin',request.path)
+        if judge:
+            return None
         path = request.path.replace('/api/','')
         allowPath = ['login']
         if path=='getWallPaper' and request.method == 'POST':

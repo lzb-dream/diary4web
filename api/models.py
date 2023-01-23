@@ -57,6 +57,9 @@ class User(models.Model):
     diaryPassword = models.CharField(max_length=255,blank=True)
     diaryStatus = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.nickName
+
     class Meta:
         managed = True
         db_table = 'userNew'
